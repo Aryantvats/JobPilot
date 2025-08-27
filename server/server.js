@@ -3,6 +3,7 @@ import "dotenv/config"
 import cors from "cors";
 import connectDB from "./configs/db.js";
 import authRoutes from "./routes/authRoutes.js";
+import profileRoutes from "./routes/profileRoutes.js";
 
 
 const app = express();
@@ -18,7 +19,8 @@ app.get("/", (req, res) => {
     res.send("api is working");
 })
 
-app.use("/api/auth",authRoutes)
+app.use("/api/auth", authRoutes)
+app.use("/api/profile", profileRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
