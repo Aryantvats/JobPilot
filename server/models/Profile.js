@@ -1,63 +1,88 @@
 import mongoose from "mongoose";
+import User from "./User.js";
 
-const profileSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // always required
+const educationSchema = new mongoose.Schema({
+  degree: String,
+  branch: String,
+  institute: String,
+  startYear: Number,
+  endYear: Number,
+});
 
-  // Basic Info
-  phone: { type: String, required: true },  
-  gender: { type: String, enum: ["Male", "Female", "Other"] },
-  dob: { type: Date },
+const courseSchema = new mongoose.Schema({
+  title: String,
+  platform: String,
+  technologies: [String],
+  year: Number,
+});
 
-  education: [
-    {
-      college: { type: String, required: true },
-      degree: { type: String, required: true },
-      branch: { type: String },
-      startYear: Number,
-      endYear: Number,
-      cgpa: Number,
-    }
-  ],
+const projectSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  technologies: [String],
+  year: Number,
+  link: String,
+});
 
-  preferences: {
-    workType: { type: String, enum: ["Remote", "In-office", "Hybrid"], required: true },
-    availability: { type: String, enum: ["Full-time", "Part-time"], required: true },
-    startDate: { type: Date, required: true },
-    duration: { type: String }, // e.g. "6 months"
+const portfolioSchema = new mongoose.Schema({
+  title: String,
+  link: String,
+});
+
+const profileSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: User,
+      required:true
+    },
+    personal: {
+      firstName: { type: String, required: true },
+      lastName: String,
+      email: { type: String, required: true, unique: true },
+      phone: { type: String, required: true },
+      city: String,
+      gender: { type: String, enum: ["Male", "Female", "Others"] },
+      languages: [String],
+      profilePicture: String, // file path or URL
+    },
+    careerObjective: String,
+    education: [educationSchema],
+    workExperience: [
+      {
+        company: String,
+        role: String,
+        duration: String,
+        description: String,
+      },
+    ],
+    internships: [
+      {
+        company: String,
+        role: String,
+        duration: String,
+        description: String,
+      },
+    ],
+    extraCurricular: [String],
+    trainingsCourses: [courseSchema],
+    projects: [projectSchema],
+    skills: [String],
+    portfolio: [portfolioSchema],
+    accomplishments: [String],
+    preferences: {
+      areasOfInterest: [String],
+      currentlyLookingFor: {
+        type: String,
+        enum: ["Jobs", "Internships"],
+      },
+      workMode: [String], // ["In-office", "Work from home"]
+      preferredCities: [String],
+    },
   },
-
-  skills: { type: [String], required: true }, // Internshala asks skills list
-
-  
-  experience: [
-    {
-      company: String,
-      role: String,
-      duration: String,
-      description: String,
-    }
-  ],
-
-  resume: {
-    type: String, 
-    required: true, 
-  },
-
-  github: {
-    type: String, 
-    required: true, 
-  },
-  linkedin: {
-    type: String, 
-    required: true, 
-  },
-  portfolio: String,
-
-  // Extra
-  bio: String,
-  achievements: [String],
-}, { timestamps: true });
-
+  { timestamps: true }
+);
 
 const Profile = mongoose.model("Profile", profileSchema);
+
 export default Profile;

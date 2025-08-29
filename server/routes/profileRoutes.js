@@ -1,23 +1,19 @@
 
 import express from "express";
 import { 
-  createProfile, 
-  getProfile, 
-  updateProfile, 
-  deleteProfile 
+  getProfile,
+  saveProfile, 
 } from "../controllers/profileController.js";
+import { protect } from "../middleware/auth.js";
 
-import upload from "../config/multer.js"; 
-import authMiddleware from "../middleware/authMiddleware.js";
 
 const profileRoutes = express.Router();
 
-profileRoutes.post("/", authMiddleware, upload.single("resume"), createProfile);
+profileRoutes.post("/", protect, saveProfile);
 
-profileRoutes.get("/:id", getProfile);
+profileRoutes.get("/me", protect,getProfile);
 
 
-profileRoutes.put("/:id", authMiddleware, upload.single("resume"), updateProfile);
 
 
 
