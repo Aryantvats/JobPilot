@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from "./configs/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
+import jobRoutes from "./routes/jobRoutes.js";
 
 
 const app = express();
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes)
 app.use("/api/profile", profileRoutes);
+app.use("/api/jobs", jobRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
