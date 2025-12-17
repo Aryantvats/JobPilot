@@ -11,12 +11,12 @@ export const saveProfile = async (req, res) => {
     if (profile) {
       profile = await Profile.findOneAndUpdate(
         { userId },
-        { personal, carrerObjective, education, workExperience, internships, extraCurricular, trainingCourses, projects, skills, portfolio, accomplishments, preferences },
+        { firstName, lastName, email, phone, careerObjective, education, workExperience, certifications, projects, skills, interestedRoles, githubLink, resumeDriveLink },
         {new:true}
       )
     } else {
       profile = await Profile.create({
-        userId, personal, carrerObjective, education, workExperience, internships, extraCurricular, trainingCourses, projects, skills, portfolio, accomplishments, preferences
+        userId, firstName, lastName, email, phone, careerObjective, education, workExperience, certifications, projects, skills, interestedRoles, githubLink, resumeDriveLink
       });
     }
     res.json({ success: true, profile });

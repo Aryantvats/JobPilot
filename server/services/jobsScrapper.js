@@ -84,9 +84,8 @@ export async function scrapeInternshalaJobDetail(url) {
     jobDetail.websiteLink = await page.$eval(".internship_details .website_link a", el => el.getAttribute("href"));
     jobDetail.openings = await page.$eval("div.internship_details > div:nth-child(13)", el => el.textContent.trim());
     jobDetail.aboutCompany = await page.$eval(".internship_details .about_company_text_container", el => el.textContent.trim());
-
   } catch (err) {
-    console.error("❌ Error scraping job details:", err.message);
+    console.error("Error scraping job details:", err.message);
   } finally {
     await browser.close();
   }
