@@ -1,9 +1,10 @@
 import express from "express";
 import { getCareerJD, getCareerJobs } from "../controllers/CareerJobsController.js";
+import { protect } from "../middleware/auth.js";
 
 const careerRoutes = express.Router();
 
-careerRoutes.get("/", getCareerJobs);
-careerRoutes.get("/jd", getCareerJD);
+careerRoutes.get("/",protect, getCareerJobs);
+careerRoutes.get("/jd",protect, getCareerJD);
 
 export default careerRoutes;

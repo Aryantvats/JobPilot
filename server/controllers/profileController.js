@@ -1,38 +1,73 @@
-
 import Profile from "../models/Profile.js";
 
-// Create or update profile
 export const saveProfile = async (req, res) => {
   try {
-    const { personal, carrerObjective, education, workExperience, internships, extraCurricular, trainingCourses, projects, skills, portfolio, accomplishments, preferences } = req.body;
+    const {firstName,lastName,email,phone,careerObjective,education,workExperience,certifications,projects,skills,interestedRoles,githubLink,resumeDriveLink,} = req.body;
+
     const userId = req.user._id;
-    let profile = await Profile.findOne({ userId });
-    
-    if (profile) {
-      profile = await Profile.findOneAndUpdate(
-        { userId },
-        { firstName, lastName, email, phone, careerObjective, education, workExperience, certifications, projects, skills, interestedRoles, githubLink, resumeDriveLink },
-        {new:true}
-      )
-    } else {
-      profile = await Profile.create({
-        userId, firstName, lastName, email, phone, careerObjective, education, workExperience, certifications, projects, skills, interestedRoles, githubLink, resumeDriveLink
+
+    const profile = await Profile.findOneAndUpdate(
+      { userId },
+      {
+        firstName,
+        lastName,
+        email,
+        phone,
+        careerObjective,
+        education,
+        workExperience,
+        certifications,
+        projects,
+        skills,
+        interestedRoles,
+        githubLink,
+        resumeDriveLink,
+      },
+      { new: true }
+    );
+
+    if (!profile) {
+      return res.status(404).json({
+        success: false,
+        message: "Profile not found",
       });
     }
-    res.json({ success: true, profile });
+
+    res.status(200).json({
+      success: true,
+      profile,
+    });
   } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
-export const getProfile=async (req,res) => {
+export const getProfile = async (req, res) => {
   try {
-    const userId = req.user._id;
-    const profile = await Profile.findOne({ userId });
-    res.json({ success: true, profile });
-  } catch (error) {
-    res.json({ success: false, message: error.message });
-  }
-}
+    res.set("Cache-Control", "no-store");
 
+    const userId = req.user._id;
+
+    let profile = await Profile.findOne({ userId });
+
+    if (!profile) {
+      profile = await Profile.create({
+        userId,
+        email: req.user.email,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      profile,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

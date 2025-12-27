@@ -1,4 +1,3 @@
-
 import express from "express";
 import { 
   getProfile,
@@ -9,7 +8,7 @@ import { protect } from "../middleware/auth.js";
 
 const profileRoutes = express.Router();
 
-profileRoutes.post("/", protect, saveProfile);
+profileRoutes.put("/save", protect, saveProfile);
 
 profileRoutes.get("/me", protect,getProfile);
 

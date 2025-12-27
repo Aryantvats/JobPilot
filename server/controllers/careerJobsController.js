@@ -2,43 +2,52 @@ import { scrapeCareerPage, fetchJobDescription } from "../services/scrapeCareers
 import { careerConfigs } from "../configs/careerConfig.js";
 import Career from "../models/career.js";
 
-export const getCareerJobs = async (req, res) => {
-    try {
-        const results = [];
 
-        for (const config of careerConfigs) {
-            const jobs = await scrapeCareerPage(config);
+export const scrapeAndStoreCareerJobs = async () => {
+  try {
+    for (const config of careerConfigs) {
+      const jobs = await scrapeCareerPage(config);
 
-            for (const job of jobs) {
-                await Career.findOneAndUpdate(
-                    { link: job.link },
-                    {
-                        company: config.company,
-                        title: job.title,
-                        location: job.location,
-                        type: job.type,
-                        link: job.link
-                    },
-                    { upsert: true }
-                );
-            }
-
-            results.push({
-                company: config.company,
-                total: jobs.length,
-                jobs: jobs.map(job => ({
-                    title: job.title,
-                    location: job.location,
-                    link: job.link
-                }))
-            });
-        }
-
-        res.status(200).json({ success: true, data: results });
-    } catch (error) {
-        res.status(500).json({ success: false, message: "Failed to scrape career pages" });
+      for (const job of jobs) {
+        await Career.findOneAndUpdate(
+          { link: job.link },
+          {
+            company: config.company,
+            title: job.title,
+            location: job.location,
+            type: job.type,
+            link: job.link
+          },
+          { upsert: true }
+        );
+      }
     }
+
+    console.log("Career jobs scraped and stored successfully");
+  } catch (error) {
+    console.error("Failed to scrape and store career jobs", error);
+  }
 };
+
+export const getCareerJobs = async (req, res) => {
+  try {
+    const jobs = await Career.find(
+      {},
+      { title: 1, location: 1, type: 1, link: 1, company: 1 }
+    ).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      data: jobs
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch career jobs"
+    });
+  }
+};
+
 
 export const getCareerJD = async (req, res) => {
     try {

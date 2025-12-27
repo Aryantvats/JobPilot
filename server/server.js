@@ -7,6 +7,7 @@ import profileRoutes from "./routes/profileRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import careerRoutes from "./routes/careerRoutes.js";
 import refferalRoutes from "./routes/refferalRoute.js";
+import bookmarkRoutes from "./routes/bookmarkRoutes.js";
 
 
 const app = express();
@@ -26,7 +27,9 @@ app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1/profile", profileRoutes);
 app.use("/api/v1/jobs", jobRoutes);
 app.use("/api/v1/careerJobs", careerRoutes);
-app.use("/api/v1/refferal", refferalRoutes);
+app.use("/api/v1/referral", refferalRoutes);
+app.use("/api/v1/bookmark", bookmarkRoutes);
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
